@@ -1,0 +1,19 @@
+{
+	"name": "Boxeres",
+	"displayName": "Boxeres",
+	"description": "Do Hitbox Shits.",
+	"version": "0.1",
+	"author": { 
+		"name": "HuyIsNull",
+		"email": "huyisnull@gmail.com",
+        "url": "https://mywebsite.com/" },
+	"contributors": [ ],
+	"publisher": "myname",
+	"license": "CC-BY-4.0",
+	"categories": [ "Scripts" ],
+	"contributes": {
+		"scripts": [ { 
+			"path": "./script.lua"
+		} ]
+	}
+}
