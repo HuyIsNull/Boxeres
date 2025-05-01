@@ -1,7 +1,7 @@
 # Boxeres
 An extension to manage and edit hitbox, hurtbox in Aseprite
 
-**NOTE: This is my first time writting a README.md file and my English is really bad. Sorry for the convenients.**
+**NOTE: This is my first time writting a README.md file and my English is really bad. Sorry for the inconvenients.**
 
 ***WARNING: This extension takes advantage of Aseprite's user-defined properties ( You can check it out here: [ user-defined_properties ]( https://www.aseprite.org/api/properties#properties ) ), Which mean when there is no more pixel on canvas all rect datas will be gone, but you can undo it and run the Show Rects command or just keep the box group lock.***
 
