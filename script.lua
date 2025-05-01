@@ -155,10 +155,20 @@ function ShowRects( )
 	if not IsActiveBox( ) or not app.cel or app.cel.data ~= "boxeres" then
 		return
 	end
-
-	for i = 1, app.cel.properties.rectCount, 1 do
-		DrawRect( app.cel.properties[ "rect" .. i ] )
+	
+	celProperties = app.cel.properties
+	properties = { rectCount = celProperties.rectCount }
+	for i = 1, properties.rectCount, 1 do
+		properties[ "rect" .. i ] = celProperties[ "rect" .. i ]
 	end
+
+	app.command.ClearCel( )
+	for i = 1, properties.rectCount, 1 do
+		DrawRect( properties[ "rect" .. i ] )
+		app.cel.properties[ "rect" .. i ] = properties[ "rect" .. i ]
+	end
+	app.cel.data = "boxeres"
+	app.cel.properties.rectCount = properties.rectCount
 end
 
 
@@ -187,7 +197,7 @@ function SaveAs( filepath )
 	end
 
 	for i, tag in ipairs( app.sprite.tags ) do
-		data.tags[ tag.name ] = { tag.fromFrame - 1, tag.frameNumber }
+		data.tags[ tag.name ] = { tag.fromFrame.frameNumber - 1, tag.frames }
 	end
 
 	local file = io.open( filepath, "w" )
@@ -197,51 +207,8 @@ function SaveAs( filepath )
 end
 
 
-function Save( )
-	local dlg = Dialog( "Save" )
-	
-	dlg:file { 
-		id = "file_path",
-		label = "This is a label:",
-		title = "This is a title",
-		save = true,
-		filetypes = { "json" }
-	}
-	dlg:button {
-		id = "save",
-		text = "Save"
-	}
-	dlg:button {
-		id = "cancel",
-		text = "Cancel"	   
-	}
-	dlg:show( )
-	local data = dlg.data
-	
-	if data.file_path == "" then
-		return
-	end
-	
-	if data.save then
-		SaveAs( data.file_path )
-	end
-
-end
-
-
-function OnBeforeCommand( event )
-end
-
-
-function OnSiteChange( )
-end
-
-
 function init( plugin )
 	print( "Initializing..." )
-
-	app.events:on( "beforecommand", OnBeforeCommand )
-	app.events:on( "sitechange", OnSiteChange )
 
 	local boxeresGroupID = "boxeres_id"
 
@@ -273,8 +240,8 @@ function init( plugin )
 
 	plugin:newCommand {
 	
-		id = "new_rect_id",
-		title = "New Rect",
+		id = "add_rect_id",
+		title = "Add Rect",
 		group = boxeresGroupID,
 		onclick = AddRect,
 		onenabled = IsSprite	
@@ -312,7 +279,36 @@ function init( plugin )
 		id = "save_as_id",
 		title = "Save As",
 		group = boxeresGroupID,
-		onclick = Save,
+		onclick = function( )
+			local dlg = Dialog( "Save" )
+			
+			dlg:file { 
+				id = "file_path",
+				label = "This is a label:",
+				title = "This is a title",
+				save = true,
+				filetypes = { "json" }
+			}
+			dlg:button {
+				id = "save",
+				text = "Save"
+			}
+			dlg:button {
+				id = "cancel",
+				text = "Cancel"	   
+			}
+			dlg:show( )
+			local data = dlg.data
+			
+			if data.file_path == "" then
+				return
+			end
+			
+			if data.save then
+				SaveAs( data.file_path )
+			end
+
+		end,
 		onenabled = IsSprite
 
 	}
@@ -323,8 +319,6 @@ end
 
 function exit( plugin )
 	
-	app.events:off( OnBeforeCommand )
-
 	print( "Quit." )
 end
 
